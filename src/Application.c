@@ -87,8 +87,9 @@ int main(void) {
 			scanf("%i", &exitVal);
 		} while(exitVal == 1);
 
-		printRMenu();
-		retEntry();
+		//printRMenu();
+		//retEntry();
+		printAll();
 
 		break;
 	case 2:
@@ -125,7 +126,49 @@ void sort() {
 	 * 			structure in our database array.
 	 */
 
+	char temp[50] = { '\0' };
+	int indicator = 0;
 
+	// Use ascii table to sort based on last names
+	// Cycle through database structures
+	for (int i = 1; i < SIZE; i++) {
+
+		//printf("index i: %d\n", i);
+
+		// Cycle through last names
+		for (int j = 0; j < SIZE; j++) {
+
+			//printf("\tindex j: %d\n", j);
+
+			// If ascii value is greater...
+			if (database[i].lName[j] < database[i - 1].lName[j]) {
+
+				// If that is the case we will move it one back
+				for (int k = 0; k < SIZE; k++) {
+					//printf("\t\tindex k: %d\n", k);
+
+					printf("'%c' at index %d has been swapped with '%c' at index %d\n", database[i].lName[k], i, database[i - 1].lName[k], i - 1);
+
+					temp[k] = database[i].lName[k];
+					database[i].lName[k] = database[i - 1].lName[k];
+					database[i - 1].lName[k] = temp[k];
+				}
+				sort();
+				indicator = 1;
+				break;
+
+			}
+
+			if (indicator == 1)
+				break;
+		}
+
+		if (indicator == 1)
+			break;
+
+	}
+
+	indicator = 0;
 
 }
 
@@ -192,6 +235,8 @@ void createEntry() {
 			database[i].isEmpty = 1;
 			break;
 		}
+
+	sort();
 
 }
 
