@@ -22,15 +22,14 @@
 #include "Menu.h"
 
 // Prototypes
-
+void createEntry();
 void delEntry(int);
 void printAll();
-void createEntry();
-void retEntry();
 void printEntry(int);
+int retEntry();
+void updateEntry();
 
 // Structs
-
 struct person {
 
 	char fName[50];
@@ -43,9 +42,9 @@ struct person {
 
 	int zipCode;
 	int isEmpty;
-
-
 } ;
+
+struct person database[50] = {};
 
 /*
  * Name:			main()
@@ -53,60 +52,85 @@ struct person {
  * Return Value:	An integer representing an error code; if the program ends without error, zero
  * 					will be returned to the calling program or operating system.
  */
-
-struct person database[50] = {};
-
-//struct person (*p)[50] = &database;
-
 int main(void) {
 
 	// Local Declarations
 	int
 		choice = 0,
-		exitVal = 0;
+		exitVal = 1;
 
 	// Processing
+	do {
+		printMenu();
 
-	printMenu();
+		// Get Main Choice ---------------
+		fflush(stdout);
+		scanf("%d", &choice);
 
-	// Get Main Choice ---------------
-	fflush(stdout);
-	scanf("%d", &choice);
-
-	switch (choice) {
-	case 0:
-		system("exit");
-		break;
-	case 1:
-		do {
+		switch (choice) {
+		case 0:
+			exitVal = 0;
+			break;
+		case 1:
 			printCMenu();
-			createEntry();
+			do {
 
-			printf("\nDo you want to create another entry? (1 - yes, 0 - no) \n");
-			fflush(stdout);
-			scanf("%i", &exitVal);
-		} while(exitVal == 1);
+				createEntry();
 
-		printRMenu();
-		retEntry();
+				printf("\nDo you want to create another entry? (1 - yes, 0 - no) \n");
+				fflush(stdout);
+				scanf("%i", &exitVal);
+			} while(exitVal == 1);
 
-		break;
-	case 2:
-		printRMenu();
-		retEntry();
-		break;
-	case 3:
-		printUMenu();
-		break;
-	case 4:
-		printDMenu();
-		break;
-	case 5:
-		printAll();
-		break;
-	default:
-		break;
-	}
+			//printRMenu();
+			//retEntry();
+			//printAll();
+			exitVal = 1;
+			break;
+		case 2:
+			printRMenu();
+			do {
+				printEntry(retEntry());
+
+				printf("\n\nWould you like to retrieve another entry? (1 - yes, 0 - no)\n");
+				fflush(stdout);
+				scanf("%i", &exitVal);
+
+			} while(exitVal == 1);
+
+			exitVal = 1;
+			break;
+		case 3:
+			printUMenu();
+			do {
+				printf("\n\nWould you like to update another entry? (1 - yes, 0 - no)\n");
+				fflush(stdout);
+				scanf("%i", &exitVal);
+
+			} while(exitVal == 1);
+
+			exitVal = 1;
+			break;
+
+		case 4:
+			printDMenu();
+			do {
+
+				printf("\n\nWould you like to delete another entry? (1 - yes, 0 - no)\n");
+				fflush(stdout);
+				scanf("%i", &exitVal);
+
+			} while(exitVal == 1);
+
+			exitVal = 1;
+			break;
+		case 5:
+			printAll();
+			break;
+		default:
+			break;
+		}
+	} while (exitVal == 1);
 
 
 	// End
@@ -119,14 +143,44 @@ int main(void) {
  * Parameters:		TBD
  * Return value:	None
  */
-void sort() {
+void sort(int pos) {
 	/*
 	 * TODO: 	Have this sort based on the zip code of a person
 	 * 			structure in our database array.
 	 */
 
+	int i, k;
 
+	char temp[50] = { '\0' };
+	int indicator = 0;
 
+	// Use ascii table to sort based on last names
+	// Cycle through database structures
+	for (i = 1; i < SIZE; i++) {
+
+		// If ascii value is greater...
+		if (database[i].lName[pos] < database[i - 1].lName[pos] && database[i].isEmpty != 0) {
+
+			// If that is the case we will move it one back
+			for (k = 0; k < SIZE; k++) {
+
+				// Make the substitution
+				temp[k] = database[i].lName[k];
+				database[i].lName[k] = database[i - 1].lName[k];
+				database[i - 1].lName[k] = temp[k];
+			}
+			indicator = 1;
+			break;
+		}
+
+		if (indicator == 1)
+			break;
+	}
+
+	if (indicator == 1)
+		sort(0);
+
+	indicator = 0;
 }
 
 
@@ -193,10 +247,12 @@ void createEntry() {
 			break;
 		}
 
+	sort(0);
+
 }
 
 
-void retEntry() {
+int retEntry() {
 
 	char temp[50] = { '\0' };
 	int count = 0;
@@ -223,29 +279,30 @@ void retEntry() {
 		}
 
 		// If all characters were the same...
-		if (count == 50) {
-			printEntry(i);
-			break;
-		}
+		if (count == 50)
+			return i;
 		else
 			count = 0;
 
 	}
 
-
+	return -99;
 }
 
 void printEntry(int i) {
 
-	printf("Index: %d\n", i);
-	printf("\t%s, %s: \n", database[i].lName, database[i].fName);
-	printf("\tZIP: %i\n", database[i].zipCode);
-	printf("\tAddress: %s\n", database[i].address);
-	printf("\tState: %s\n", database[i].state);
-	printf("\tCity: %s\n", database[i].city);
-	printf("\tEmail: %s\n", database[i].email);
-	printf("\tPhone Number: %s\n\n", database[i].pNumber);
-
+	if (i != -99) {
+		printf("Index: %d\n", i);
+		printf("\t%s, %s: \n", database[i].lName, database[i].fName);
+		printf("\tZIP: %i\n", database[i].zipCode);
+		printf("\tAddress: %s\n", database[i].address);
+		printf("\tState: %s\n", database[i].state);
+		printf("\tCity: %s\n", database[i].city);
+		printf("\tEmail: %s\n", database[i].email);
+		printf("\tPhone Number: %s\n\n", database[i].pNumber);
+	}
+	else
+		printf("Entry not found");
 }
 /*
  * Name:			delEntry()
@@ -306,6 +363,73 @@ void printAll() {
 	}
 
 }
+
+/*
+ *
+ */
+void updateEntry() {
+
+	int i 		= retEntry();
+	char choice = '\0';
+
+	// Is the entry found?
+	if (i != -99) {
+
+		printf("Entry found was: ");
+		printEntry(i);
+
+		printf("Would you like to edit last name?");
+		printf("Would you like to edit first name?");
+		printf("Would you like to edit ?");
+		printf("Would you like to edit ?");
+		printf("Would you like to edit ?");
+		printf("Would you like to edit ?");
+		printf("Would you like to edit ?");
+		printf("Would you like to edit ?");
+		printf("Would you like to edit ?");
+
+	}
+	else
+		printf("Entry not found");
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
