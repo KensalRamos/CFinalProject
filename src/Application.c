@@ -416,26 +416,187 @@ void updateEntry() {
 		} while (num == 1);
 
 		// First name
+		do {
+			scanf("%c", &temp);
+			printf("Would you like to update the first name? (y - yes, n - no)\n");
+			fflush(stdout);
+			scanf("%c", &temp);
+			scanf("%c", &ch);
 
+			if (ch == 'y' || ch == 'Y') {
+				printf("Please enter desired first name: ");
+				fflush(stdout);
+				scanf("%s", database[i].fName);
+
+				printf("\nEntry has been modifed. Entry now has the following information: \n");
+				printEntry(i);
+
+				num = 0;
+			}
+			else if (ch == 'n' || ch == 'N')
+				num = 0;
+			else {
+				printf("Invalid character entered!\n");
+				num = 1;
+			}
+		} while (num == 1);
+		
 		// ZIP Code
+		do {
+			scanf("%c", &temp);
+			printf("Would you like to update the ZIP code? (y - yes, n - no)\n");
+			fflush(stdout);
+			scanf("%c", &temp);
+			scanf("%c", &ch);
 
+			if (ch == 'y' || ch == 'Y') {
+				printf("Please enter desired ZIP code: ");
+				fflush(stdout);
+				scanf("%i", &database[i].zipCode);
+
+				printf("\nEntry has been modifed. Entry now has the following information: \n");
+				printEntry(i);
+
+				num = 0;
+			}
+			else if (ch == 'n' || ch == 'N')
+				num = 0;
+			else {
+				printf("Invalid character entered!\n");
+				num = 1;
+			}
+		} while (num == 1);
+		
 		// Address
+		do {
+			scanf("%c", &temp);
+			printf("Would you like to update the address? (y - yes, n - no)\n");
+			fflush(stdout);
+			scanf("%c", &temp);
+			scanf("%c", &ch);
 
+			if (ch == 'y' || ch == 'Y') {
+				printf("Please enter desired address: ");
+				fflush(stdout);
+				scanf("%s", database[i].address);
+
+				printf("\nEntry has been modifed. Entry now has the following information: \n");
+				printEntry(i);
+
+				num = 0;
+			}
+			else if (ch == 'n' || ch == 'N')
+				num = 0;
+			else {
+				printf("Invalid character entered!\n");
+				num = 1;
+			}
+		} while (num == 1);
+		
 		// State
+		do {
+			scanf("%c", &temp);
+			printf("Would you like to update the state? (y - yes, n - no)\n");
+			fflush(stdout);
+			scanf("%c", &temp);
+			scanf("%c", &ch);
 
+			if (ch == 'y' || ch == 'Y') {
+				printf("Please enter desired state of residence: ");
+				fflush(stdout);
+				scanf("%s", database[i].state);
+
+				printf("\nEntry has been modifed. Entry now has the following information: \n");
+				printEntry(i);
+
+				num = 0;
+			}
+			else if (ch == 'n' || ch == 'N')
+				num = 0;
+			else {
+				printf("Invalid character entered!\n");
+				num = 1;
+			}
+		} while (num == 1);
+		
 		// City
+		do {
+			scanf("%c", &temp);
+			printf("Would you like to update the city? (y - yes, n - no)\n");
+			fflush(stdout);
+			scanf("%c", &temp);
+			scanf("%c", &ch);
 
+			if (ch == 'y' || ch == 'Y') {
+				printf("Please enter desired city: ");
+				fflush(stdout);
+				scanf("%s", database[i].city);
+
+				printf("\nEntry has been modifed. Entry now has the following information: \n");
+				printEntry(i);
+
+				num = 0;
+			}
+			else if (ch == 'n' || ch == 'N')
+				num = 0;
+			else {
+				printf("Invalid character entered!\n");
+				num = 1;
+			}
+		} while (num == 1);
+		
 		// Email
+		do {
+			scanf("%c", &temp);
+			printf("Would you like to update the email? (y - yes, n - no)\n");
+			fflush(stdout);
+			scanf("%c", &temp);
+			scanf("%c", &ch);
 
+			if (ch == 'y' || ch == 'Y') {
+				printf("Please enter desired email: ");
+				fflush(stdout);
+				scanf("%s", database[i].email);
+
+				printf("\nEntry has been modifed. Entry now has the following information: \n");
+				printEntry(i);
+
+				num = 0;
+			}
+			else if (ch == 'n' || ch == 'N')
+				num = 0;
+			else {
+				printf("Invalid character entered!\n");
+				num = 1;
+			}
+		} while (num == 1);
+		
 		// Phone Number
-		printf("Would you like to update the first name? (y - yes, n - no)\n");
-		printf("Would you like to update the ZIP code? (y - yes, n - no)\n");
-		printf("Would you like to update the address? (y - yes, n - no)\n");
-		printf("Would you like to update the state? (y - yes, n - no)\n");
-		printf("Would you like to update the city? (y - yes, n - no)\n");
-		printf("Would you like to update the email? (y - yes, n - no)\n");
-		printf("Would you like to update the phone number? (y - yes, n - no)\n");
+		do {
+			scanf("%c", &temp);
+			printf("Would you like to update the phone number? (y - yes, n - no)\n");
+			fflush(stdout);
+			scanf("%c", &temp);
+			scanf("%c", &ch);
 
+			if (ch == 'y' || ch == 'Y') {
+				printf("Please enter desired phone number: ");
+				fflush(stdout);
+				scanf("%s", database[i].pNumber);
+
+				printf("\nEntry has been modifed. Entry now has the following information: \n");
+				printEntry(i);
+
+				num = 0;
+			}
+			else if (ch == 'n' || ch == 'N')
+				num = 0;
+			else {
+				printf("Invalid character entered!\n");
+				num = 1;
+			}
+		} while (num == 1);
+		
 	}
 	else
 		printf("Entry not found");
