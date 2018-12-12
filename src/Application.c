@@ -58,6 +58,8 @@ int main(void) {
 	int
 		choice = 0,
 		exitVal = 1;
+	char
+		temp = '\0';
 
 	// Processing
 	do {
@@ -65,7 +67,7 @@ int main(void) {
 
 		// Get Main Choice ---------------
 		fflush(stdout);
-		scanf("%d", &choice);
+		scanf("%i", &choice);
 
 		switch (choice) {
 		case 0:
@@ -102,7 +104,9 @@ int main(void) {
 			break;
 		case 3:
 			printUMenu();
+
 			do {
+				updateEntry();
 				printf("\n\nWould you like to update another entry? (1 - yes, 0 - no)\n");
 				fflush(stdout);
 				scanf("%i", &exitVal);
@@ -369,24 +373,68 @@ void printAll() {
  */
 void updateEntry() {
 
-	int i 		= retEntry();
-	char choice = '\0';
+	int
+		i 		= retEntry(),
+		num = 0;
+	char
+		ch = '\0',
+		temp = '\0';
 
 	// Is the entry found?
 	if (i != -99) {
 
-		printf("Entry found was: ");
+		printf("Entry found was: \n");
 		printEntry(i);
 
-		printf("Would you like to edit last name?");
-		printf("Would you like to edit first name?");
-		printf("Would you like to edit ?");
-		printf("Would you like to edit ?");
-		printf("Would you like to edit ?");
-		printf("Would you like to edit ?");
-		printf("Would you like to edit ?");
-		printf("Would you like to edit ?");
-		printf("Would you like to edit ?");
+
+		// Last name
+		do {
+			scanf("%c", &temp);
+			printf("Would you like to update the last name? (y - yes, n - no)\n");
+			fflush(stdout);
+			scanf("%c", &temp);
+			scanf("%c", &ch);
+
+			if (ch == 'y' || ch == 'Y') {
+				printf("Please enter desired last name: ");
+				fflush(stdout);
+				scanf("%s", database[i].lName);
+
+				printf("\nEntry has been modifed. Entry now has the following information: \n");
+				printEntry(i);
+
+				num = 0;
+			}
+			else if (ch == 'n' || ch == 'N')
+				num = 0;
+			else {
+				printf("Invalid character entered!\n");
+				num = 1;
+			}
+
+
+		} while (num == 1);
+
+		// First name
+
+		// ZIP Code
+
+		// Address
+
+		// State
+
+		// City
+
+		// Email
+
+		// Phone Number
+		printf("Would you like to update the first name? (y - yes, n - no)\n");
+		printf("Would you like to update the ZIP code? (y - yes, n - no)\n");
+		printf("Would you like to update the address? (y - yes, n - no)\n");
+		printf("Would you like to update the state? (y - yes, n - no)\n");
+		printf("Would you like to update the city? (y - yes, n - no)\n");
+		printf("Would you like to update the email? (y - yes, n - no)\n");
+		printf("Would you like to update the phone number? (y - yes, n - no)\n");
 
 	}
 	else
