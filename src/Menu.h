@@ -37,6 +37,7 @@ void printMenu() {
 	printf("|\t\t3) Update entry	\t|\n");
 	printf("|\t\t4) Delete entry	\t|\n");
 	printf("|\t\t5) Display entries	|\n");
+	printf("|\t\t6) Save File		|\n");
 	printf("-----------------------------------------\n");
 	printf("Select option: ");
 
