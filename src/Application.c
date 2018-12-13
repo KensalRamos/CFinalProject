@@ -27,7 +27,11 @@ void delEntry(int);
 void printAll();
 void printEntry(int);
 int retEntry();
+void saveFile();
+void sort(int);
 void updateEntry();
+
+
 
 // Structs
 struct person {
@@ -58,8 +62,6 @@ int main(void) {
 	int
 		choice = 0,
 		exitVal = 1;
-	char
-		temp = '\0';
 
 	// Processing
 	do {
@@ -131,6 +133,9 @@ int main(void) {
 		case 5:
 			printAll();
 			break;
+		case 6:
+			saveFile();
+			break;
 		default:
 			break;
 		}
@@ -143,55 +148,10 @@ int main(void) {
 }
 
 /*
- * Name:			sort()
- * Parameters:		TBD
- * Return value:	None
- */
-void sort(int pos) {
-	/*
-	 * TODO: 	Have this sort based on the zip code of a person
-	 * 			structure in our database array.
-	 */
-
-	int i, k;
-
-	char temp[50] = { '\0' };
-	int indicator = 0;
-
-	// Use ascii table to sort based on last names
-	// Cycle through database structures
-	for (i = 1; i < SIZE; i++) {
-
-		// If ascii value is greater...
-		if (database[i].lName[pos] < database[i - 1].lName[pos] && database[i].isEmpty != 0) {
-
-			// If that is the case we will move it one back
-			for (k = 0; k < SIZE; k++) {
-
-				// Make the substitution
-				temp[k] = database[i].lName[k];
-				database[i].lName[k] = database[i - 1].lName[k];
-				database[i - 1].lName[k] = temp[k];
-			}
-			indicator = 1;
-			break;
-		}
-
-		if (indicator == 1)
-			break;
-	}
-
-	if (indicator == 1)
-		sort(0);
-
-	indicator = 0;
-}
-
-
-/*
  * Name:			createEntry()
  * Parameters:		None
  * Return Value:	None
+ * Description: 	Creates a new entry to the database structure array
  */
 void createEntry() {
 
@@ -255,64 +215,11 @@ void createEntry() {
 
 }
 
-
-int retEntry() {
-
-	char temp[50] = { '\0' };
-	int count = 0;
-
-	printf("Please enter the last name of the desired person: ");
-	fflush(stdout);
-	scanf("%s", temp);
-
-	// Search
-	for (int i = 0; i < SIZE; i++) {
-
-		// If it is not empty...
-		if (database[i].isEmpty != 0) {
-
-			for (int j = 0; j < SIZE; j++) {
-
-				// Test each character individually
-				if (database[i].lName[j] == temp[j])
-					count++;
-
-
-			}
-
-		}
-
-		// If all characters were the same...
-		if (count == 50)
-			return i;
-		else
-			count = 0;
-
-	}
-
-	return -99;
-}
-
-void printEntry(int i) {
-
-	if (i != -99) {
-		printf("Index: %d\n", i);
-		printf("\t%s, %s: \n", database[i].lName, database[i].fName);
-		printf("\tZIP: %i\n", database[i].zipCode);
-		printf("\tAddress: %s\n", database[i].address);
-		printf("\tState: %s\n", database[i].state);
-		printf("\tCity: %s\n", database[i].city);
-		printf("\tEmail: %s\n", database[i].email);
-		printf("\tPhone Number: %s\n\n", database[i].pNumber);
-	}
-	else
-		printf("Entry not found");
-}
 /*
  * Name:			delEntry()
  * Parameters:		int index - position of desired person struct
  * Return Value: 	None
- *
+ * Description:		Deletes desired entry from database structure array
  */
 void delEntry(int index) {
 
@@ -348,36 +255,184 @@ void delEntry(int index) {
 
 }
 
+
 /*
- *
+ * Name:			printfAll()
+ * Parameters:		None
+ * Return Value:	None
+ * Description:		Prints all non-empty entries
  */
 void printAll() {
 
 	for(int i = 0; i < SIZE; i++) {
 
-		printf("Index: %d\n", i);
-		printf("\t%s, %s: \n", database[i].lName, database[i].fName);
-		printf("\tZIP: %i\n", database[i].zipCode);
-		printf("\tAddress: %s\n", database[i].address);
-		printf("\tState: %s\n", database[i].state);
-		printf("\tCity: %s\n", database[i].city);
-		printf("\tEmail: %s\n", database[i].email);
-		printf("\tPhone Number: %s\n\n", database[i].pNumber);
+		if (database[i].isEmpty == 1) {
+			printf("Index: %d\n", i);
+			printf("\tName: %s, %s \n", database[i].lName, database[i].fName);
+			printf("\tZIP: %i\n", database[i].zipCode);
+			printf("\tAddress: %s\n", database[i].address);
+			printf("\tState: %s\n", database[i].state);
+			printf("\tCity: %s\n", database[i].city);
+			printf("\tEmail: %s\n", database[i].email);
+			printf("\tPhone Number: %s\n\n", database[i].pNumber);
+		}
 
 	}
 
 }
 
 /*
- *
+ * Name: 			printEntry()
+ * Parameters:		int i	-	The index of the desired entry
+ * Return Value: 	None
+ * Description: 	Prints the information of the given entry
+ */
+void printEntry(int i) {
+
+	if (i != -99) {
+		printf("Index: %d\n", i);
+		printf("\tName: %s, %s \n", database[i].lName, database[i].fName);
+		printf("\tZIP: %i\n", database[i].zipCode);
+		printf("\tAddress: %s\n", database[i].address);
+		printf("\tState: %s\n", database[i].state);
+		printf("\tCity: %s\n", database[i].city);
+		printf("\tEmail: %s\n", database[i].email);
+		printf("\tPhone Number: %s\n\n", database[i].pNumber);
+	}
+	else
+		printf("Entry not found");
+}
+
+/*
+ * Name:			retEntry()
+ * Parameters: 		None.
+ * Return Value:	Index of entry
+ * Description: 	Gets the index of an entry with given last name.
+ */
+int retEntry() {
+
+	char temp[50] = { '\0' };
+	int count = 0;
+
+	printf("Please enter the last name of the desired person: ");
+	fflush(stdout);
+	scanf("%s", temp);
+
+	// Search
+	for (int i = 0; i < SIZE; i++) {
+
+		// If it is not empty...
+		if (database[i].isEmpty != 0) {
+
+			for (int j = 0; j < SIZE; j++) {
+				// Test each character individually
+				if (database[i].lName[j] == temp[j])
+					count++;
+			}
+
+		}
+
+		// If all characters were the same...
+		if (count == 50)
+			return i;
+		else
+			count = 0;
+
+	}
+
+	return -99;
+}
+
+/*
+ * Name: 			saveFile()
+ * Parameters:		None
+ * Return Value:	None
+ * Description:		Saves information of non-empty entries
+ */
+void saveFile() {
+
+	FILE *fp;
+	char buff[255];
+
+	fp = fopen("file.txt", "w");
+
+	// Save all information
+	for (int i = 0; i < SIZE; i++) {
+
+		if (database[i].isEmpty == 1) {
+
+			fprintf(fp, database[i].lName);
+			fprintf(fp, "\r\n");
+			fprintf(fp, database[i].fName);
+			fprintf(fp, "\r\n");
+			fprintf(fp, database[i].address);
+			fprintf(fp, "\r\n");
+			fprintf(fp, database[i].city);
+			fprintf(fp, "\r\n");
+			fprintf(fp, database[i].state);
+			fprintf(fp, "\r\n");
+			fprintf(fp, database[i].email);
+			fprintf(fp, "\r\n");
+			fprintf(fp, "%i", database[i].zipCode);
+			fprintf(fp, "\r\n");
+			fprintf(fp, database[i].pNumber);
+			fprintf(fp, "\r\n");
+			fprintf(fp, "\r\n");
+
+		}
+
+	}
+
+	fclose(fp);
+	printf("File saved successfully.\n");
+}
+
+
+/*
+ * Name:			sort()
+ * Parameters:		int pos	-	Position of check
+ * Return value:	None
+ * Description:		Sorts alphabetically based on first character
+ */
+void sort(int pos) {
+
+	int i, k;
+
+	char temp[50] = { '\0' };
+
+	// Use ascii table to sort based on last names
+	// Cycle through database structures
+	for (i = 1; i < SIZE; i++) {
+
+		// If ascii value is greater...
+		if (database[i].lName[pos] < database[i - 1].lName[pos] && database[i].isEmpty != 0) {
+
+			// If that is the case we will move it one back
+			for (k = 0; k < SIZE; k++) {
+				// Make the substitution
+				temp[k] = database[i].lName[k];
+				database[i].lName[k] = database[i - 1].lName[k];
+				database[i - 1].lName[k] = temp[k];
+			}
+			break;
+		}
+	}
+
+}
+
+/*
+ * Name: 			updateEntry()
+ * Parameters:		None
+ * Return Value:	None
+ * Description:		Updates given entry.
  */
 void updateEntry() {
 
 	int
 		i 		= retEntry(),
-		num = 0;
+		num 	= 0,
+		choice	= 0;
 	char
-		ch = '\0',
 		temp = '\0';
 
 	// Is the entry found?
@@ -390,12 +445,12 @@ void updateEntry() {
 		// Last name
 		do {
 			scanf("%c", &temp);
-			printf("Would you like to update the last name? (y - yes, n - no)\n");
+			printf("Would you like to update the last name? (1 - yes, 0 - no)\n");
 			fflush(stdout);
 			scanf("%c", &temp);
-			scanf("%c", &ch);
+			scanf("%i", &choice);
 
-			if (ch == 'y' || ch == 'Y') {
+			if (choice == 1) {
 				printf("Please enter desired last name: ");
 				fflush(stdout);
 				scanf("%s", database[i].lName);
@@ -405,10 +460,12 @@ void updateEntry() {
 
 				num = 0;
 			}
-			else if (ch == 'n' || ch == 'N')
+			else if (choice == 0) {
+				printf("No changes made.\n");
 				num = 0;
+			}
 			else {
-				printf("Invalid character entered!\n");
+				printf("Invalid number entered!\n");
 				num = 1;
 			}
 
@@ -418,12 +475,12 @@ void updateEntry() {
 		// First name
 		do {
 			scanf("%c", &temp);
-			printf("Would you like to update the first name? (y - yes, n - no)\n");
+			printf("Would you like to update the first name? (1 - yes, 0 - no)\n");
 			fflush(stdout);
 			scanf("%c", &temp);
-			scanf("%c", &ch);
+			scanf("%i", &choice);
 
-			if (ch == 'y' || ch == 'Y') {
+			if (choice == 1) {
 				printf("Please enter desired first name: ");
 				fflush(stdout);
 				scanf("%s", database[i].fName);
@@ -433,23 +490,25 @@ void updateEntry() {
 
 				num = 0;
 			}
-			else if (ch == 'n' || ch == 'N')
+			else if (choice == 0) {
+				printf("No changes made.\n");
 				num = 0;
+			}
 			else {
-				printf("Invalid character entered!\n");
+				printf("Invalid number entered!\n");
 				num = 1;
 			}
 		} while (num == 1);
-		
+
 		// ZIP Code
 		do {
 			scanf("%c", &temp);
-			printf("Would you like to update the ZIP code? (y - yes, n - no)\n");
+			printf("Would you like to update the ZIP code? (1 - yes, 0 - no)\n");
 			fflush(stdout);
 			scanf("%c", &temp);
-			scanf("%c", &ch);
+			scanf("%i", &choice);
 
-			if (ch == 'y' || ch == 'Y') {
+			if (choice == 1) {
 				printf("Please enter desired ZIP code: ");
 				fflush(stdout);
 				scanf("%i", &database[i].zipCode);
@@ -459,23 +518,25 @@ void updateEntry() {
 
 				num = 0;
 			}
-			else if (ch == 'n' || ch == 'N')
+			else if (choice == 0) {
+				printf("No changes made.\n");
 				num = 0;
+			}
 			else {
-				printf("Invalid character entered!\n");
+				printf("Invalid number entered!\n");
 				num = 1;
 			}
 		} while (num == 1);
-		
+
 		// Address
 		do {
 			scanf("%c", &temp);
-			printf("Would you like to update the address? (y - yes, n - no)\n");
+			printf("Would you like to update the address? (1 - yes, 0 - no)\n");
 			fflush(stdout);
 			scanf("%c", &temp);
-			scanf("%c", &ch);
+			scanf("%i", &choice);
 
-			if (ch == 'y' || ch == 'Y') {
+			if (choice == 1) {
 				printf("Please enter desired address: ");
 				fflush(stdout);
 				scanf("%s", database[i].address);
@@ -485,23 +546,25 @@ void updateEntry() {
 
 				num = 0;
 			}
-			else if (ch == 'n' || ch == 'N')
+			else if (choice == 0) {
+				printf("No changes made.\n");
 				num = 0;
+			}
 			else {
-				printf("Invalid character entered!\n");
+				printf("Invalid number entered!\n");
 				num = 1;
 			}
 		} while (num == 1);
-		
+
 		// State
 		do {
 			scanf("%c", &temp);
-			printf("Would you like to update the state? (y - yes, n - no)\n");
+			printf("Would you like to update the state? (1 - yes, 0 - no)\n");
 			fflush(stdout);
 			scanf("%c", &temp);
-			scanf("%c", &ch);
+			scanf("%i", &choice);
 
-			if (ch == 'y' || ch == 'Y') {
+			if (choice) {
 				printf("Please enter desired state of residence: ");
 				fflush(stdout);
 				scanf("%s", database[i].state);
@@ -511,23 +574,25 @@ void updateEntry() {
 
 				num = 0;
 			}
-			else if (ch == 'n' || ch == 'N')
+			else if (choice == 0) {
+				printf("No changes made.\n");
 				num = 0;
+			}
 			else {
-				printf("Invalid character entered!\n");
+				printf("Invalid number entered!\n");
 				num = 1;
 			}
 		} while (num == 1);
-		
+
 		// City
 		do {
 			scanf("%c", &temp);
-			printf("Would you like to update the city? (y - yes, n - no)\n");
+			printf("Would you like to update the city? (1 - yes, 0 - no)\n");
 			fflush(stdout);
 			scanf("%c", &temp);
-			scanf("%c", &ch);
+			scanf("%i", &choice);
 
-			if (ch == 'y' || ch == 'Y') {
+			if (choice == 1) {
 				printf("Please enter desired city: ");
 				fflush(stdout);
 				scanf("%s", database[i].city);
@@ -537,23 +602,25 @@ void updateEntry() {
 
 				num = 0;
 			}
-			else if (ch == 'n' || ch == 'N')
+			else if (choice == 0) {
+				printf("No changes made.\n");
 				num = 0;
+			}
 			else {
-				printf("Invalid character entered!\n");
+				printf("Invalid number entered!\n");
 				num = 1;
 			}
 		} while (num == 1);
-		
+
 		// Email
 		do {
 			scanf("%c", &temp);
-			printf("Would you like to update the email? (y - yes, n - no)\n");
+			printf("Would you like to update the email? (1 - yes, 0 - no)\n");
 			fflush(stdout);
 			scanf("%c", &temp);
-			scanf("%c", &ch);
+			scanf("%i", &choice);
 
-			if (ch == 'y' || ch == 'Y') {
+			if (choice == 1) {
 				printf("Please enter desired email: ");
 				fflush(stdout);
 				scanf("%s", database[i].email);
@@ -563,23 +630,25 @@ void updateEntry() {
 
 				num = 0;
 			}
-			else if (ch == 'n' || ch == 'N')
+			else if (choice == 0) {
+				printf("No changes made.\n");
 				num = 0;
+			}
 			else {
-				printf("Invalid character entered!\n");
+				printf("Invalid number entered!\n");
 				num = 1;
 			}
 		} while (num == 1);
-		
+
 		// Phone Number
 		do {
 			scanf("%c", &temp);
-			printf("Would you like to update the phone number? (y - yes, n - no)\n");
+			printf("Would you like to update the phone number? (1 - yes, 0 - no)\n");
 			fflush(stdout);
 			scanf("%c", &temp);
-			scanf("%c", &ch);
+			scanf("%i", &choice);
 
-			if (ch == 'y' || ch == 'Y') {
+			if (choice == 1) {
 				printf("Please enter desired phone number: ");
 				fflush(stdout);
 				scanf("%s", database[i].pNumber);
@@ -589,22 +658,21 @@ void updateEntry() {
 
 				num = 0;
 			}
-			else if (ch == 'n' || ch == 'N')
+			else if (choice == 0) {
+				printf("No changes made.\n");
 				num = 0;
+			}
 			else {
-				printf("Invalid character entered!\n");
+				printf("Invalid number entered!\n");
 				num = 1;
 			}
 		} while (num == 1);
-		
+
 	}
 	else
 		printf("Entry not found");
 
 }
-
-
-
 
 
 
